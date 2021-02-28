@@ -10,3 +10,5 @@ examples/*_result.mp4
 *.jpg
 *.png
 *.zip
+*.swp
+/env

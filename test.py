@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import cv2
-import matplotlib.pyplot as plt
 from PIL import Image
 import numpy as np
 import math
@@ -88,7 +87,7 @@ def read_frame_from_videos(vname):
 
 def main_worker():
     # set up models 
-    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     net = importlib.import_module('model.' + args.model)
     model = net.InpaintGenerator().to(device)
     model_path = args.ckpt

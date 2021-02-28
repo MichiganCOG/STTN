@@ -1,4 +1,23 @@
 # STTN for Video Inpainting
+
+# Setup
+
+```
+conda create -p ./env -y
+conda activate ./env
+conda env update -f environment.yml
+
+wget -O checkpoints/sttn.pth https://umich.box.com/shared/static/7yqut3gaxz7860ce1ckyyu5lgma99kwe.pth
+```
+
+## Run demo
+
+```
+python test.py --video examples/schoolgirls_orig.mp4 --mask examples/schoolgirls  --ckpt checkpoints/sttn.pth
+```
+
+---
+
 ![teaser](https://github.com/researchmm/STTN/blob/master/docs/teaser.png?raw=true)
 
 ### [Paper](https://arxiv.org/abs/2007.10247) | [Demo](https://www.youtube.com/watch?v=tgiWGdr1SnE&feature=youtu.be) | [Video](https://drive.google.com/file/d/19eKm4AJhIbJAbvXyA-HTQHFdia7XcN6H/view?usp=sharing) | [Slides](https://drive.google.com/file/d/1y09-SLcTadqpuDDLSzFdtr3ymGbjrmyi/view?usp=sharing) |[BibTex](https://github.com/researchmm/STTN#citation)
