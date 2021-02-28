@@ -33,6 +33,7 @@ parser.add_argument("-v", "--video", type=str, required=True)
 parser.add_argument("-m", "--mask",   type=str, required=True)
 parser.add_argument("-c", "--ckpt",   type=str, required=True)
 parser.add_argument("--model",   type=str, default='sttn')
+parser.add_argument("-o", "--output_dir", type=str, required=True)
 args = parser.parse_args()
 
 
@@ -85,6 +86,15 @@ def read_frame_from_videos(vname):
     return frames       
 
 
+def read_frame_from_folder(frames_dir):
+    frames = []
+    for file_name in sorted(os.listdir(frames_dir)):
+        file_path = os.path.join(frames_dir, file_name)
+        image = Image.open(file_path)
+        frames.append(image.resize((w,h)))
+    return frames
+
+
 def main_worker():
     # set up models 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -97,7 +107,7 @@ def main_worker():
     model.eval()
 
     # prepare datset, encode all frames into deep space 
-    frames = read_frame_from_videos(args.video)
+    frames = read_frame_from_folder(args.video)
     video_length = len(frames)
     feats = _to_tensors(frames).unsqueeze(0)*2-1
     frames = [np.array(f).astype(np.uint8) for f in frames]
@@ -134,13 +144,15 @@ def main_worker():
                 else:
                     comp_frames[idx] = comp_frames[idx].astype(
                         np.float32)*0.5 + img.astype(np.float32)*0.5
-    writer = cv2.VideoWriter(f"{args.mask}_result.mp4", cv2.VideoWriter_fourcc(*"mp4v"), default_fps, (w, h))
+    if not os.path.isdir(args.output_dir):
+        os.makedirs(args.output_dir)
     for f in range(video_length):
         comp = np.array(comp_frames[f]).astype(
             np.uint8)*binary_masks[f] + frames[f] * (1-binary_masks[f])
-        writer.write(cv2.cvtColor(np.array(comp).astype(np.uint8), cv2.COLOR_BGR2RGB))
-    writer.release()
-    print('Finish in {}'.format(f"{args.mask}_result.mp4"))
+        frame = cv2.cvtColor(np.array(comp).astype(np.uint8), cv2.COLOR_BGR2RGB)
+        cv2.imwrite(os.path.join(args.output_dir, f"frame_{f:04d}_pred.png"), frame)
+
+    print('Finish in {}'.format(args.output_dir))
 
 
 
