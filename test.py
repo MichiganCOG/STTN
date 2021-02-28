@@ -36,8 +36,7 @@ parser.add_argument("--model",   type=str, default='sttn')
 parser.add_argument("-o", "--output_dir", type=str, required=True)
 args = parser.parse_args()
 
-
-w, h = 432, 240
+w, h = None, None
 ref_length = 10
 neighbor_stride = 5
 default_fps = 24
@@ -96,6 +95,12 @@ def read_frame_from_folder(frames_dir):
 
 
 def main_worker():
+    # set image resolution
+    global w, h
+    frame_path = os.path.join(args.video, os.listdir(args.video)[0])
+    frame = Image.open(frame_path)
+    w, h = frame.size
+
     # set up models 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     net = importlib.import_module('model.' + args.model)
