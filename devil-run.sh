@@ -25,3 +25,6 @@ env/bin/python test.py \
     --mask "$INPUT_ROOT/masks" \
     --ckpt "checkpoints/sttn.pth" \
     -o "$OUTPUT_ROOT"
+
+# Clean up auxiliary frame and mask folders
+rm -r "$INPUT_ROOT/frames" "$INPUT_ROOT/masks"
