@@ -10,12 +10,6 @@ conda env update -f environment.yml
 wget -O checkpoints/sttn.pth https://umich.box.com/shared/static/7yqut3gaxz7860ce1ckyyu5lgma99kwe.pth
 ```
 
-## Run demo
-
-```
-python test.py --video examples/schoolgirls_orig.mp4 --mask examples/schoolgirls  --ckpt checkpoints/sttn.pth
-```
-
 ---
 
 ![teaser](https://github.com/researchmm/STTN/blob/master/docs/teaser.png?raw=true)
